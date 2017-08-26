@@ -16,19 +16,30 @@ class SimpleForm extends Component {
       {hasError && <Message error header='Error' content={error} />}
       <Input
         error={hasError}
-        fluid 
+        fluid
         placeholder='Location...' {...input} {...custom} />
     </div>
   }
 
-  submit() {
-
+  submit({ location }, dispatch) {
+    return new Promise((resolve, reject) => {
+      dispatch({
+        type: 'FETCH_WEATHER',
+        location,
+        resolve,
+        reject
+      })
+    }).catch((error) => {
+      // will populate new submission error field
+      throw new SubmissionError(error);
+    })
   }
 
+  // shows the form
   render() {
     const { handleSubmit } = this.props;
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={handleSubmit(this.submit)}>
         <Field name='location' component={this.locationInput} />
         <br />
         <Button fluid type='submit'>Submit</Button>
@@ -40,14 +51,14 @@ class SimpleForm extends Component {
 // {location: text}
 const validate = ({ location }) => {
   const errors = {};
-  if (!location && location.trim() === '') {
+  if (!location || location.trim() === '') {
     errors.location = 'Location Required';
   }
-
   return errors;
 }
 
 // form is an identifier
 export default reduxForm({
-  form: 'simple'
+  form: 'simple',
+  validate
 })(SimpleForm);

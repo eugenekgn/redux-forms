@@ -6,6 +6,8 @@ import Main from './Main';
 
 function mapStateToProps(state) {
   return {
+    weather: state.weater,
+    from: state.from
   };
 }
 
