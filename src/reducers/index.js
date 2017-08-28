@@ -5,9 +5,9 @@ import { reducer as formReducer } from 'redux-form';
 import weather from './weather';
 
 const rootReducer = combineReducers({
-  weather,
   form: formReducer,
-  routing: routerReducer
+  routing: routerReducer,
+  weather
 });
 
 export default rootReducer;

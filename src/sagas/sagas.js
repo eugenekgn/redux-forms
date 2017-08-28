@@ -1,5 +1,5 @@
-import { takeEvery } from 'redux-saga';
-import { fork, call, put } from 'redux-saga/effects';
+import {takeEvery} from 'redux-saga';
+import {fork, call, put} from 'redux-saga/effects';
 import request from 'superagent';
 
 function getWeather(location) {
@@ -11,23 +11,24 @@ function getWeather(location) {
     });
 }
 
-function* callGetWeather({ location, resolve, reject }) {
+function* callGetWeather({location, resolve, reject}) {
   const result = yield call(getWeather, location);
   console.log(result);
   if (result.query.results) {
-    yield put({ type: "WEATHER_FETCHED", result });
+    console.log(result.query)
+    yield put({type: 'WEATHER_FETCHED', result});
     yield call(resolve);
   } else {
-    yield call(reject, { location: 'No data for that location' });
+    yield call(reject, {location: 'No data for that location'});
   }
 }
 
 function* getWeatherSaga() {
-  yield* takeEvery("FETCH_WEATHER", callGetWeather);
+  yield* takeEvery('FETCH_WEATHER', callGetWeather);
 }
 
 export default function* root() {
   yield [
     fork(getWeatherSaga)
-  ]
+  ];
 }
